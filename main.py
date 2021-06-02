@@ -8,9 +8,9 @@ import datetime
 import os
 import psycopg2
 
-#DATABASE_URL = os.environ[db_url]
+# DATABASE_URL = os.environ[db_url]
 
-#conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,12 +58,12 @@ def main():
     jq = updater.job_queue
     dp.add_handler(CommandHandler("start", weather_command))
     dp.add_handler(CommandHandler("dourjob", weather_command))
-    #jq.run_daily(weather_command, days=(0, 1, 2, 3, 4, 5, 6), time=datetime.time(00, 3, 30))
+    # jq.run_daily(weather_command, days=(0, 1, 2, 3, 4, 5, 6), time=datetime.time(00, 3, 30))
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path=bot_token)
-    updater.bot.setWebhook('https://brizzle.herokuapp.com/' + bot_token)
+                          url_path=bot_token,
+                          webhook_url='https://brizzle.herokuapp.com/' + bot_token)
 
     updater.idle()
 
