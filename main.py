@@ -50,7 +50,7 @@ def weather_command(update, context):
 
 
 def main():
-    PORT = int(os.environ.get('PORT', 5000))
+    PORT = int(os.environ.get('PORT', 8443))
 
     updater = Updater(bot_token, use_context=True)
 
