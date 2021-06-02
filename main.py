@@ -50,6 +50,8 @@ def weather_command(update, context):
 
 
 def main():
+    PORT = int(os.environ.get('PORT', 5000))
+
     updater = Updater(bot_token, use_context=True)
 
     dp = updater.dispatcher
@@ -58,7 +60,10 @@ def main():
     dp.add_handler(CommandHandler("dourjob", weather_command))
     #jq.run_daily(weather_command, days=(0, 1, 2, 3, 4, 5, 6), time=datetime.time(00, 3, 30))
 
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=bot_token)
+    updater.bot.setWebhook('https://brizzle.herokuapp.com/' + bot_token)
 
     updater.idle()
 
