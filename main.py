@@ -1,7 +1,5 @@
 import requests
-
 import json
-from config import *
 from stuffs import *
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
