@@ -23,7 +23,7 @@ def weather_command(update, context):
     icon_set = ['', '', '🌩', '🌦', '', '🌧', '🌨', '', '⛅', '☀']
     url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&exclude=minutely,alerts," \
           "hourly&appid=%s&units=metric" % (
-              lat, lon, api_key)
+              lat, lon, os.environ("api_key"))
 
     # print(url)
     response = requests.get(url)
@@ -62,7 +62,7 @@ def main():
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=bot_token,
-                          webhook_url='https://brizzle.herokuapp.com/' + bot_token)
+                          webhook_url='https://brizzle.herokuapp.com/' + os.environ("bot_token"))
 
     updater.idle()
 
