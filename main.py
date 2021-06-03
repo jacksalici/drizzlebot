@@ -51,7 +51,7 @@ def weather_command(update, context):
 def main():
     PORT = int(os.environ.get('PORT', 8443))
 
-    updater = Updater(bot_token, use_context=True)
+    updater = Updater(os.environ("bot_token"), use_context=True)
 
     dp = updater.dispatcher
     jq = updater.job_queue
@@ -61,7 +61,7 @@ def main():
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path=bot_token,
+                          url_path=os.environ("bot_token"),
                           webhook_url='https://brizzle.herokuapp.com/' + os.environ("bot_token"))
 
     updater.idle()
