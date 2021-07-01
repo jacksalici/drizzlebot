@@ -50,7 +50,7 @@ def weather_command(update, context):
 
 
 def main():
-    DATABASE_URL = os.environ[db_url]
+    DATABASE_URL = os.environ[DATABASE_URL]
 
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
