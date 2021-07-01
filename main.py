@@ -7,13 +7,6 @@ import datetime
 import os
 import psycopg2
 
-# DATABASE_URL = os.environ[db_url]
-
-# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-# Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 def start(update, context):
     update.message.reply_text('Hi!')
@@ -30,12 +23,20 @@ def weather_command(update, context):
     today_data = json.loads(response.text)
     # print(json.dumps(today_data, indent=4))
     today_data = json.loads(response.text)["daily"][0]
+    
     if float(today_data['weather'][0]['id']) == 800.0:
         icon = icon_set[9]
     else:
         icon = icon_set[round(float(today_data['weather'][0]['id']) / 100)]
 
-    weather_message = f"Good morning, today's forecast is for {today_data['weather'][0]['description']} {icon} with temperatures between {round(float(today_data['temp']['min']))} and {round(float(today_data['temp']['max']))}°C.";
+    if datetime.hour<12:
+        greetings = "Good morning"
+    elif datetime.hour <18:
+        greetings = "Good day"
+    else:
+        greetings = "Good evening"
+    
+    weather_message = f"{greetings}, today's forecast is for {today_data['weather'][0]['description']} {icon} with temperatures between {round(float(today_data['temp']['min']))} and {round(float(today_data['temp']['max']))}°C.";
 
     update.message.reply_text(weather_message)
     # print(weather_message)
@@ -49,6 +50,16 @@ def weather_command(update, context):
 
 
 def main():
+    DATABASE_URL = os.environ[db_url]
+
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+
+    # Enable logging
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    
     PORT = int(os.environ.get('PORT', 8443))
 
     updater = Updater(os.environ['bot_token'], use_context=True)
