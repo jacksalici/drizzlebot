@@ -18,10 +18,7 @@ def weather_command(update, context):
           "hourly&appid=%s&units=metric" % (
               lat, lon, os.environ['OW_API_KEY'])
 
-    # print(url)
     response = requests.get(url)
-    today_data = json.loads(response.text)
-    # print(json.dumps(today_data, indent=4))
     today_data = json.loads(response.text)["daily"][0]
     
     if float(today_data['weather'][0]['id']) == 800.0:
@@ -39,31 +36,42 @@ def weather_command(update, context):
     weather_message = f"{greetings}, today's forecast is for {today_data['weather'][0]['description']} {icon} with temperatures between {round(float(today_data['temp']['min']))} and {round(float(today_data['temp']['max']))}°C."
 
     update.message.reply_text(weather_message)
-    # print(weather_message)
 
-    # send_text = 'https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage?chat_id=' + bot_chatID +
-    # '&parse_mode=Markdown&text=' + weather_message print(send_text) response = requests.get(send_text)
 
-    # print(response.json())
 
-    # requests.get(send_message_url)
+def connect():
+    conn = None
+    try:
+
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(os.environ[DATABASE_URL])
+		
+        cur = conn.cursor()
+        
+        print('PostgreSQL database version:')
+        cur.execute('SELECT version()')
+
+        db_version = cur.fetchone()
+        print(db_version)
+       
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
 
 
 def main():
-    #DATABASE_URL = os.environ[DATABASE_URL]
-
-    #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    
-    
+     
     PORT = int(os.environ.get('PORT', 8443))
 
     updater = Updater(os.environ['TG_BOT_TOKEN'], use_context=True)
 
     dp = updater.dispatcher
-    jq = updater.job_queue
     dp.add_handler(CommandHandler("start", weather_command))
     dp.add_handler(CommandHandler("forecast", weather_command))
-    # jq.run_daily(weather_command, days=(0, 1, 2, 3, 4, 5, 6), time=datetime.time(00, 3, 30))
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
