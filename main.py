@@ -29,9 +29,9 @@ def weather_command(update, context):
     else:
         icon = icon_set[round(float(today_data['weather'][0]['id']) / 100)]
 
-    if datetime.hour<12:
+    if  datetime.datetime.now().hour<12:
         greetings = "Good morning"
-    elif datetime.hour <18:
+    elif datetime.datetime.now().hour<18:
         greetings = "Good day"
     else:
         greetings = "Good evening"
