@@ -62,7 +62,7 @@ def main():
     dp = updater.dispatcher
     jq = updater.job_queue
     dp.add_handler(CommandHandler("start", weather_command))
-    dp.add_handler(CommandHandler("dourjob", weather_command))
+    dp.add_handler(CommandHandler("forecast", weather_command))
     # jq.run_daily(weather_command, days=(0, 1, 2, 3, 4, 5, 6), time=datetime.time(00, 3, 30))
 
     updater.start_webhook(listen="0.0.0.0",
