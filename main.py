@@ -16,7 +16,7 @@ def weather_command(update, context):
     icon_set = ['', '', '🌩', '🌦', '', '🌧', '🌨', '', '⛅', '☀']
     url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&exclude=minutely,alerts," \
           "hourly&appid=%s&units=metric" % (
-              lat, lon, os.environ['api_key'])
+              lat, lon, os.environ['OW_API_KEY'])
 
     # print(url)
     response = requests.get(url)
@@ -36,12 +36,12 @@ def weather_command(update, context):
     else:
         greetings = "Good evening"
     
-    weather_message = f"{greetings}, today's forecast is for {today_data['weather'][0]['description']} {icon} with temperatures between {round(float(today_data['temp']['min']))} and {round(float(today_data['temp']['max']))}°C.";
+    weather_message = f"{greetings}, today's forecast is for {today_data['weather'][0]['description']} {icon} with temperatures between {round(float(today_data['temp']['min']))} and {round(float(today_data['temp']['max']))}°C."
 
     update.message.reply_text(weather_message)
     # print(weather_message)
 
-    # send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID +
+    # send_text = 'https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage?chat_id=' + bot_chatID +
     # '&parse_mode=Markdown&text=' + weather_message print(send_text) response = requests.get(send_text)
 
     # print(response.json())
@@ -50,19 +50,14 @@ def weather_command(update, context):
 
 
 def main():
-    DATABASE_URL = os.environ[DATABASE_URL]
+    #DATABASE_URL = os.environ[DATABASE_URL]
 
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-
-    # Enable logging
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-    logger = logging.getLogger(__name__)
+    #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     
     
     PORT = int(os.environ.get('PORT', 8443))
 
-    updater = Updater(os.environ['bot_token'], use_context=True)
+    updater = Updater(os.environ['TG_BOT_TOKEN'], use_context=True)
 
     dp = updater.dispatcher
     jq = updater.job_queue
@@ -72,8 +67,8 @@ def main():
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path=os.environ['bot_token'],
-                          webhook_url='https://brizzle.herokuapp.com/' + os.environ['bot_token'])
+                          url_path=os.environ['TG_BOT_TOKEN'],
+                          webhook_url='https://brizzle.herokuapp.com/' + os.environ['TG_BOT_TOKEN'])
 
     updater.idle()
 
